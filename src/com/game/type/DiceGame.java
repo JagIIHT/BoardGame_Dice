@@ -21,15 +21,15 @@ public class DiceGame extends Game {
 	private void generatePlayers() {
 		for (int i = 0; i < this.playersCount; i++) {
 			Player p = new Player();
-			p.setName("Player-" + (i+1));
+			p.setName("Player-" + (i + 1));
 			players.put("Player" + i, p);
 		}
 	}
 
 	@Override
 	public void displayResults() {
-		this.players.entrySet().stream().forEach(
-				k -> System.out.println("Player - " + k.getValue().getName() + " has amount of " + k.getValue().getAmount() + " in position " + k.getValue().getPositionHistory()));
+		this.players.entrySet().stream().forEach(k -> System.out.println(k.getValue().getName() + " has amount of "
+				+ k.getValue().getAmount() + " and went through positions - " + k.getValue().getPositionHistory()));
 
 	}
 
@@ -39,33 +39,42 @@ public class DiceGame extends Game {
 
 	@Override
 	public void playGame() {
-		calculatePlayersAmount();
+		playersInitialPositionCalc();
+		for (int i = 1; i <= this.diceNumbers.size(); i++) {
+			setCurrentPlayer((i - 1) % this.playersCount);
+			this.player.setPosition(this.player.getPosition() + Integer.valueOf(this.diceNumbers.get(i - 1)));
+			String position = newPosition();
+			player.setPositionHistory(player.getPositionHistory() + "," + position);
+			calculatePlayersAmount(position);
+		}
+	}
+
+	private void playersInitialPositionCalc() {
+		this.players.entrySet().stream().forEach(pair -> {
+			this.player = pair.getValue();
+			this.player.setPositionHistory(this.boardPositions.get(0));
+			calculatePlayersAmount(this.boardPositions.get(0));
+		});
 	}
 
 	private String newPosition() {
-		String newPosition = this.boardPositions.get(((this.player.getPosition()) % this.boardPositions.size()) -1);
+		String newPosition = this.boardPositions.get(((this.player.getPosition()) % this.boardPositions.size()) - 1);
 		return newPosition;
 	}
 
-	private void calculatePlayersAmount() {
-		for (int i = 1; i <= this.diceNumbers.size(); i++) {
-			setCurrentPlayer((i-1) % this.playersCount);
-			this.player.setPosition(this.player.getPosition() + Integer.valueOf(this.diceNumbers.get(i-1)));
-			String position = newPosition();
-			player.setPositionHistory(player.getPositionHistory() + "," + position);
-			BoardValue bv = BoardValue.EMPTY;
-			if (position.equalsIgnoreCase(BoardValue.TREASURE.getCellType())) {
-				bv = BoardValue.TREASURE;
-			} else if (position.equalsIgnoreCase(BoardValue.HOTEL.getCellType())) {
-				bv = BoardValue.HOTEL;
-				if (!houseBought) {
-					bv = BoardValue.HOTELBUY;
-				}
-			} else if (position.equalsIgnoreCase(BoardValue.JAIL.getCellType())) {
-				bv = BoardValue.JAIL;
+	private void calculatePlayersAmount(String position) {
+		BoardValue bv = BoardValue.EMPTY;
+		if (position.equalsIgnoreCase(BoardValue.TREASURE.getCellType())) {
+			bv = BoardValue.TREASURE;
+		} else if (position.equalsIgnoreCase(BoardValue.HOTEL.getCellType())) {
+			bv = BoardValue.HOTEL;
+			if (!this.houseBought) {
+				bv = BoardValue.HOTELBUY;
+				this.houseBought = true;
 			}
-			this.player.setAmount(this.player.getAmount().add(bv.getValue()));
-			
+		} else if (position.equalsIgnoreCase(BoardValue.JAIL.getCellType())) {
+			bv = BoardValue.JAIL;
 		}
+		this.player.setAmount(this.player.getAmount().add(bv.getValue()));
 	}
 }
