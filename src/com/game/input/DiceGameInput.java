@@ -16,12 +16,14 @@ public class DiceGameInput implements GameInput {
 	@Override
 	public List<String> getBoardPositions() {
 //		System.out.println("Enter Board Positions - ");
+//		return Arrays.asList(getConsoleValue().split(","));
 		return Arrays.asList("E,E,E,T,H,T,J,J,E,H,T,H,E,E,E,E,E,E,E,E,E".split(","));
 	}
 
 	@Override
 	public List<String> getDiceNumbers() {
 //		System.out.println("Enter Dice numbers - ");
+//		return Arrays.asList(getConsoleValue().split(","));
 		return Arrays.asList("2,3,2,4,2,3,4,3,2,4,2".split(","));
 	}
 
