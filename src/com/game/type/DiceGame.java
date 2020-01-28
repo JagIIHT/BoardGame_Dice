@@ -1,5 +1,6 @@
 package com.game.type;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -9,12 +10,24 @@ import com.game.player.Player;
 
 public class DiceGame extends Game {
 
+	private GameInput input;
 	private Player player;
 	private Map<String, Player> players = new TreeMap<String, Player>();
 	private boolean houseBought;
+	private int playersCount;
+	private List<String> boardPositions;
+	private List<String> diceNumbers;
 
 	public DiceGame(GameInput input) {
 		super(input);
+		this.input = input;
+	}
+
+	@Override
+	public void setGameInput() {
+		this.playersCount = this.input.getPlayersCount();
+		this.boardPositions = this.input.getBoardPositions();
+		this.diceNumbers = this.input.getDiceNumbers();
 		generatePlayers();
 	}
 
