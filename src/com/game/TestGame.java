@@ -1,4 +1,4 @@
-package com.game.client;
+package com.game;
 
 import com.game.application.Application;
 import com.game.application.GameApplication;
