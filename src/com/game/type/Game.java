@@ -1,10 +1,6 @@
 package com.game.type;
 
-import com.game.input.GameInput;
-
 public abstract class Game {
-
-	public Game(GameInput input) {}
 
 	public abstract void setGameInput();
 

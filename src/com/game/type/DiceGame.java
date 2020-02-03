@@ -19,7 +19,6 @@ public class DiceGame extends Game {
 	private List<String> diceNumbers;
 
 	public DiceGame(GameInput input) {
-		super(input);
 		this.input = input;
 	}
 
@@ -76,6 +75,11 @@ public class DiceGame extends Game {
 	}
 
 	private void calculatePlayersAmount(String position) {
+		BoardValue bv = resolvePosition(position);
+		this.player.setAmount(this.player.getAmount().add(bv.getValue()));
+	}
+	
+	private BoardValue resolvePosition(String position) {
 		BoardValue bv = BoardValue.EMPTY;
 		if (position.equalsIgnoreCase(BoardValue.TREASURE.getCellType())) {
 			bv = BoardValue.TREASURE;
@@ -88,6 +92,6 @@ public class DiceGame extends Game {
 		} else if (position.equalsIgnoreCase(BoardValue.JAIL.getCellType())) {
 			bv = BoardValue.JAIL;
 		}
-		this.player.setAmount(this.player.getAmount().add(bv.getValue()));
+		return bv;
 	}
 }
